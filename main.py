@@ -26,11 +26,11 @@ def exitprogram():
     os._exit(1)
 
 def main():
-    print(f"\nOhjelman kautta seurattuja: {followedCount()}")
-    choice = input('''\nMitä haluat tehdä?
-    1. Seuraa käyttäjän seuraajia
-    2. Epäseuraa ohjelman kautta seurattuja käyttäjiä
-    3. Lopeta
+    print(f"\nAmount followed through this program: {followedCount()}")
+    choice = input('''\nWhat would you like to do?
+    1. Follow users of another user
+    2. Unfollow users followed from this program
+    3. Exit
 ''')
 
     actions = {
@@ -42,7 +42,7 @@ def main():
     try:
         actions[int(choice)]()
     except (KeyError, ValueError):
-        print("Mitä vittua sä just painoit")
+        print("What the fuck did you just press?")
         main()
     finally:
         main()
@@ -59,14 +59,14 @@ def error_handling(e):
 
 
 def getMyfriends():
-    print("\nHaetaan omia seuraajia...")
+    print("\nFetching your own followers...")
     my_id = client.get_me().data.id
     my_friends_response = client.get_users_followers(
         id=my_id, max_results=1000)
     allFriends = []
     if my_friends_response.data:
         while True:
-            print(f"{len(allFriends)} seuraajaa haettu..")
+            print(f"{len(allFriends)} followers fetched..")
             if "next_token" not in my_friends_response.meta:
                 for user in my_friends_response:
                     for x in user:
@@ -84,7 +84,7 @@ def getMyfriends():
                     id=my_id, max_results=1000, pagination_token=next_token)
         return allFriends
     else:
-        print("Ei mulla oo kavereita :(\n")
+        print("I have no friends :(\n")
         return allFriends
 
 
@@ -96,9 +96,9 @@ def followUsers():
     myfollowers = getMyfriends()
     blacklist = file_contents + list(set(myfollowers) - set(file_contents))
 
-    name = input("Syötä twitter käyttäjä ilman @ merkkiä: ")
+    name = input("Insert twitter username without @ sign: ")
     amount = int(
-        input("Kuinka monta seurataan (n.200/päivä on suositeltua): "))
+        input("How many would you like to follow?: "))
     user = client.get_user(username=name)
     followers = client.get_users_followers(
         id=user.data.id, max_results=1000)
@@ -111,7 +111,7 @@ def followUsers():
                     try:
                         if str(x.id) in blacklist:
                             print(
-                                f"Käyttäjä jo seurattu/seuraa sinua: {x}")
+                                f"User has previously been followed or is following you: {x}")
                             pass
                         else:
                             client.follow_user(x.id)
@@ -121,13 +121,13 @@ def followUsers():
                             followingappend.flush()
                             counter += 1
                             print(
-                                f"\nKäyttäjä seurattu: {x} - ({counter}/{amount})\nAikaa jäljellä: {round((timecounter)/60, 2)}min")
+                                f"\nUser followed: {x} - ({counter}/{amount})\nTime remaining: {round((timecounter)/60, 2)}min")
                             sleep(10)
                             timecounter -= 18
                     except (tweepy.TweepyException, tweepy.TooManyRequests) as e:
                         error_handling(e)
             else:
-                print("Valmis!")
+                print("Job done!")
                 break
     ignoresappend.close()
     followingappend.close()
@@ -140,10 +140,10 @@ def unfollowAll():
 
     if len(followed_users) > 0:
         copylist = followed_users.copy()
-        print(f"Ohjelman kautta seurattuja käyttäjiä: {len(followed_users)}\n")
+        print(f"Users followed through this program: {len(followed_users)}\n")
         amount = int(input(
-        '''Epäseuraamiset aloitetaan aina vanhimmista seurauksista.
-        Montako epäseurataan?: '''))
+        '''Unfollows always start from the oldest.
+           How many would you like to unfollow?: '''))
         counter = 0
         timecounter = (len(followed_users)-1)*18
 
@@ -160,15 +160,15 @@ def unfollowAll():
                         for line in copylist:
                             outfile.write(line+"\n")
                     counter+=1
-                    print(f"\nKäyttäjä epäseurattu - ({counter}/{amount})\nAikaa jäljellä: {round((timecounter)/60, 2)}min")
+                    print(f"\nUser unfollowed - ({counter}/{amount})\nTime remaining: {round((timecounter)/60, 2)}min")
                     timecounter-=18
                     sleep(18)
             else:
-                print("Valmis!")
+                print("Ready!")
                 break
 
     else:
-        print("Ei seurattuja käyttäjiä.")
+        print("No followed users found.")
     
 if __name__ == "__main__":
     main()
