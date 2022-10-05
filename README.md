@@ -4,11 +4,14 @@ I guess you could also call it a follower churn bot.
 
 ##
 <h2>Usage</h2>
-
-<h3>Install required libraries:</h3>
+<h4>1. Get your API keys from twitter developer page</h4>
+<h4>2. Change key values in environment file</h4>
+<h4>3. Install required libraries:</h4>
 <code>pip install tweepy</code>
 <code>pip install dotenv</code>
-##
+<br>
+<h4>4. Run</h4>
+<code>python main.py</code>
 
 <h2>Logic</h2>
 Data written to files are in realtime so random quits wont matter
