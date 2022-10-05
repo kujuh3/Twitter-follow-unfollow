@@ -122,7 +122,7 @@ def followUsers():
                             counter += 1
                             print(
                                 f"\nUser followed: {x} - ({counter}/{amount})\nTime remaining: {round((timecounter)/60, 2)}min")
-                            sleep(10)
+                            sleep(18)
                             timecounter -= 18
                     except (tweepy.TweepyException, tweepy.TooManyRequests) as e:
                         error_handling(e)
