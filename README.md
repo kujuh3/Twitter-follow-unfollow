@@ -1,6 +1,6 @@
 Mass follow and or unfollow users of another user
 
-I guess you could also call it a follower churn bot.
+I guess you could also call it a follower churn bot. Twitter is real hush hush about their limits in numbers so how likely this'll get you banned will depend on your own usage.
 
 ##
 <h2>Usage</h2>
